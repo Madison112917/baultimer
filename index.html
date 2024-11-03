@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!
+Dev: Sajib hasan
+
+>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baul Link Push</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #countdown {
+            font-size: 20px;
+            margin-top: 10px;
+            color: rgb(255, 0, 0); /* Start with red */
+        }
+        #countdown2 {
+            font-size: 20px;
+            margin-top: 10px;
+            color: rgb(255, 0, 0); /* Start with red */
+        }
+    </style>
+    <script>
+        function startSearch() {
+            const input = document.getElementById("searchInput").value;
+            const timeDelay = document.getElementById("timeDelay").value * 60000; // Convert minutes to milliseconds
+            let remainingTime = timeDelay;
+
+            // Simple URL validation
+            try {
+                new URL(input);
+            } catch (_) {
+                alert("Please enter a valid URL.");
+                return;
+            }
+
+            const countdownElement = document.getElementById("countdown");
+            countdownElement.style.display = "block"; // Show the countdown element
+
+            const countdownInterval = setInterval(() => {
+                const minutes = Math.floor(remainingTime / 60000);
+                const seconds = Math.floor((remainingTime % 60000) / 1000);
+                countdownElement.textContent = `Timer: ${minutes}m ${seconds}s`;
+
+                // Change countdown color based on time remaining
+                const red = Math.floor((255 * remainingTime) / timeDelay);
+                const green = Math.floor((255 * (timeDelay - remainingTime)) / timeDelay);
+                countdownElement.style.color = `rgb(${red}, ${green}, 0)`;
+
+                remainingTime -= 1000;
+
+                if (remainingTime < 0) {
+                    clearInterval(countdownInterval);
+                    window.open(input, '_blank'); // Open the link in a new tab
+                }
+            }, 1000);
+        }
+    </script>
+</head>
+<body>
+    <h1>Baul Auto Timer Push</h1>
+    <form onsubmit="event.preventDefault(); startSearch();">
+        <label for="searchInput">Baul Full Link:</label>
+        <input type="text" id="searchInput" placeholder="https://example.com" required><br>
+        
+        <label for="timeDelay">Time-Minutes:</label>
+        <input type="number" id="timeDelay" placeholder="Delay (minutes)" min="1" required><br><br>
+        
+        <button type="submit">Setup</button>
+    </form>
+    <div id="countdown" style="display: none;"></div>
+        <h3 id="colorText">Survey World Of Money</h3>
+
+    <script>
+        let red = 0;
+        let green = 0;
+        let blue = 0;
+
+        function changeColor() {
+            // Randomize RGB values
+            red = Math.floor(Math.random() * 256);
+            green = Math.floor(Math.random() * 256);
+            blue = Math.floor(Math.random() * 256);
+
+            // Change the text color
+            document.getElementById('colorText').style.color = `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        // Change color every second
+        setInterval(changeColor, 1000);
+    </script>
+        
+</body>
+</html>
+
+
+
