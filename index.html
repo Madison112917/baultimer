@@ -42,40 +42,44 @@
     
     <script>
         let countdownInterval;
-        let remainingTime;
+        let endTime; // Stores the exact end time
         let userLink = null; // Store the link, initially null
 
         function startTimer() {
             const timeDelay = document.getElementById("timeDelay").value * 60000; // Convert minutes to milliseconds
-            remainingTime = timeDelay;
 
             if (!timeDelay || timeDelay <= 0) {
                 alert("Please enter a valid time.");
                 return;
             }
 
+            endTime = Date.now() + timeDelay; // Calculate the exact end time
             document.getElementById("countdown").style.display = "block";
 
-            countdownInterval = setInterval(() => {
-                const minutes = Math.floor(remainingTime / 60000);
-                const seconds = Math.floor((remainingTime % 60000) / 1000);
-                document.getElementById("countdown").textContent = `Timer: ${minutes}m ${seconds}s`;
+            updateCountdown(); // Start the countdown
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
 
-                // Countdown color change
-                const red = Math.floor((255 * remainingTime) / timeDelay);
-                const green = Math.floor((255 * (timeDelay - remainingTime)) / timeDelay);
-                document.getElementById("countdown").style.color = `rgb(${red}, ${green}, 0)`;
-
-                remainingTime -= 1000;
-
-                if (remainingTime < 0) {
-                    clearInterval(countdownInterval);
-                    if (userLink) {
-                        window.open(userLink, '_blank');
-                        userLink = null; // Reset link after opening
-                    }
+        function updateCountdown() {
+            const remainingTime = endTime - Date.now();
+            if (remainingTime <= 0) {
+                clearInterval(countdownInterval);
+                if (userLink) {
+                    window.open(userLink, '_blank');
+                    userLink = null; // Reset link after opening
                 }
-            }, 1000);
+                return;
+            }
+
+            const minutes = Math.floor(remainingTime / 60000);
+            const seconds = Math.floor((remainingTime % 60000) / 1000);
+            document.getElementById("countdown").textContent = `Timer: ${minutes}m ${seconds}s`;
+
+            // Countdown color change
+            const totalDuration = parseInt(document.getElementById("timeDelay").value) * 60000;
+            const red = Math.floor((255 * remainingTime) / totalDuration);
+            const green = Math.floor((255 * (totalDuration - remainingTime)) / totalDuration);
+            document.getElementById("countdown").style.color = `rgb(${red}, ${green}, 0)`;
         }
 
         function setLink() {
@@ -90,6 +94,13 @@
 
             userLink = input; // Store the link
         }
+
+        // If the page is minimized and re-opened, ensure the timer updates correctly
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) {
+                updateCountdown();
+            }
+        });
 
         function changeColor() {
             let red = Math.floor(Math.random() * 256);
